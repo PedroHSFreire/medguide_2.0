@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# local secrets
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# build output
+.next/
+out/
+dist/
+build/
+
+# local database and SQLite sidecar files
+*.sqlite
+*.sqlite-*
+
+# logs and OS/editor files
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,7 @@
+POST https://medguide-y0j4.onrender.com/api/pacient/login
+Content-Type: aplication/json
+
+{
+    "email": "pedro@gmail.com",
+    password: "senha123"
+}
