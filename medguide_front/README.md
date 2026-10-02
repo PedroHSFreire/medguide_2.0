@@ -1,83 +1,51 @@
-# MedGuide — Front-end
+# MedGuide Mobile
 
-Aplicação web do MedGuide para conectar pacientes a profissionais de saúde. Oferece fluxos separados para pacientes e médicos, busca de profissionais e gestão de consultas. A API fica no repositório [Medguide](https://github.com/PedroHSFreire/Medguide).
+Aplicativo móvel do MedGuide para Android e iOS, criado com React Native, Expo e Expo Router. A API permanece no projeto irmão [Medguide](https://github.com/PedroHSFreire/Medguide).
 
 ## Funcionalidades
 
-- Páginas iniciais e de dúvidas.
-- Cadastro e login separados para pacientes e médicos.
-- Painéis e páginas de perfil para os dois tipos de usuário.
-- Busca de médicos e especialidades.
-- Criação, consulta e cancelamento de agendamentos.
-- Proteção de páginas e gerenciamento de sessão no cliente.
+- Acesso e cadastro separados para pacientes e médicos.
+- Sessão autenticada armazenada com Expo SecureStore.
+- Busca de médicos por nome e especialidade.
+- Solicitação de consultas com seleção nativa de data e horário.
+- Acompanhamento de consultas pelo paciente e atualização de status pelo médico.
+- Visualização e edição do perfil, além da central de dúvidas.
 
-## Tecnologias
+## Requisitos
 
-- Next.js 16 com App Router e React 19.
-- TypeScript, Tailwind CSS 4 e ESLint.
-- `fetch`/Axios para comunicação com a API e NextAuth para integração de autenticação.
+- Node.js e npm.
+- Expo Go para executar em dispositivo físico ou emulador configurado para Android/iOS.
+- API MedGuide acessível pelo dispositivo. Para emuladores, use o endereço de host apropriado em vez de `localhost` quando necessário.
 
-## Requisitos e execução
-
-Use uma versão do Node.js compatível com Next.js 16 e npm.
+## Executar
 
 ```bash
-npm ci
+npm install
 Copy-Item .env.example .env.local
-npm run dev
 ```
 
-Abra `http://localhost:3000`. Para conferir a versão de produção e as regras de lint:
+Defina `EXPO_PUBLIC_API_URL` em `.env.local` com a URL base da API, sem `/api`, e inicie o Expo. O exemplo usa `10.0.2.2`, endereço do host visto pelo emulador Android. Para iOS Simulator, `localhost` costuma apontar para o host; em um celular físico, use o IP local do computador na rede Wi-Fi:
 
 ```bash
-npm run build
-npm run start
-npm run lint
+npm start
 ```
 
-`npm run start` serve a compilação existente; execute `npm run build` antes.
+Use o QR code do Expo Go ou os atalhos exibidos pelo Expo CLI. Para abrir diretamente um alvo disponível:
 
-## Configuração
+```bash
+npm run android
+npm run ios
+```
 
-O cliente lê as seguintes variáveis de ambiente:
+## API
 
-| Variável | Finalidade |
-| --- | --- |
-| `NEXT_PUBLIC_API_URL` | URL base do back-end, sem o sufixo `/api` (por exemplo, `http://localhost:8080`) |
-| `NEXTAUTH_URL` | URL pública da aplicação usada pela configuração de autenticação |
-| `NEXTAUTH_SECRET` | Segredo da sessão NextAuth; use valor aleatório e mantenha fora do Git |
+O app usa `EXPO_PUBLIC_API_URL` e os endpoints REST do MedGuide, incluindo autenticação e cadastro de paciente/médico, perfis, busca de profissionais e consultas. Chamadas autenticadas enviam o token como `Authorization: Bearer <token>`; no cliente nativo ele fica no armazenamento seguro do dispositivo.
 
-Copie `.env.example` para `.env.local` e preencha os valores do seu ambiente. Nunca publique credenciais ou segredos. O arquivo `.env.local` que estava rastreado foi removido da versão atual e passou a ser ignorado pelo Git; como os valores anteriores permanecem no histórico, considere o segredo NextAuth e quaisquer credenciais reais que estavam nele expostos e rotacione-os. O front-end chama a API configurada em `NEXT_PUBLIC_API_URL`; a persistência de cadastros e consultas é feita pelo SQLite no back-end.
-
-## Organização do código
+## Estrutura
 
 ```text
-src/app/
-  doctor/                 login, cadastro, painel e perfil do médico
-  pacient/                login, cadastro, painel e perfil do paciente
-  doubts/                 página de dúvidas
-  api/auth/[...nextauth]/ integração do NextAuth
-  lib/                    autenticação, hooks, serviços e tipos da API
-src/components/           componentes e telas compartilhados
-public/                   recursos estáticos
+src/app/             Rotas Expo Router
+src/components/      Telas e componentes React Native
+src/lib/api.ts       Cliente HTTP e modelos da API
+src/lib/auth.tsx     Sessão e autenticação
 ```
-
-As páginas vivem no App Router. Os módulos em `src/app/lib/service` concentram chamadas HTTP de autenticação, perfis, busca e consultas; hooks em `src/app/lib/hooks` conectam essas operações às páginas. O estado de autenticação e os componentes de acesso protegido ficam em `lib/auth*`, `useAuth` e `ProtectedRoute`.
-
-## Integração com o back-end
-
-O front-end espera a API no formato `${NEXT_PUBLIC_API_URL}/api`. Entre os caminhos consumidos estão:
-
-- `/doctor/register`, `/doctor/login`, `/doctor/profile`, `/doctor/search` e `/doctor/specialties`.
-- `/pacient/register`, `/pacient/login` e `/pacient/profile`.
-- `/appointments` e caminhos para buscar ou cancelar consultas.
-
-As chamadas autenticadas obtêm o token armazenado no navegador e o enviam como `Authorization: Bearer <token>`. Consulte o README do back-end para rotas disponíveis e campos esperados.
-
-## Pontos encontrados na avaliação
-
-- A listagem de consultas usa `/api/appointments/patient/:patientId`, alinhado com a rota do back-end nesta revisão.
-- Há mais de um serviço de busca de médicos e agendamentos com contratos parcialmente diferentes. Ao alterar a API, confira todos os módulos consumidores.
-- A integração NextAuth e a autenticação própria via token no `localStorage` coexistem no código. Revise qual fluxo é a fonte oficial de sessão antes de ampliar o uso.
-- O `.env.local` foi removido da versão atual do Git e passou a ser ignorado, mas continua no histórico anterior. Segredos que já foram publicados precisam ser rotacionados; removê-los em um commit futuro não apaga o histórico.
-- Não foi encontrado script de testes; os scripts disponíveis são `dev`, `build`, `start` e `lint`.

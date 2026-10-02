@@ -1,35 +1,29 @@
 {
-  "name": "medguidefront",
-  "version": "0.1.0",
+  "name": "medguide-mobile",
+  "version": "1.0.0",
   "private": true,
+  "main": "expo-router/entry",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@types/express": "^5.0.4",
-    "axios": "^1.12.2",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "express": "^5.1.0",
-    "lucide-react": "^0.546.0",
-    "next": "16.0.0",
-    "next-auth": "^4.24.13",
-    "nodemailer": "^7.0.10",
-    "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "@react-native-community/datetimepicker": "9.1.0",
+    "expo": "^57.0.26",
+    "expo-constants": "~57.0.0",
+    "expo-linking": "~57.0.0",
+    "expo-router": "~57.0.24",
+    "expo-secure-store": "~57.0.4",
+    "expo-status-bar": "~57.0.0",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "autoprefixer": "^10.4.14",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.0",
-    "postcss": "^8.4.24",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@types/react": "~19.2.4",
+    "typescript": "~6.0.3"
   }
 }
